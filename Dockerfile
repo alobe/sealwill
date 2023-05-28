@@ -1,5 +1,5 @@
 # 使用官方的Golang镜像作为基础镜像
-FROM golang:1.17-alpine as builder
+FROM golang:1.20-alpine as builder
 
 # 设置工作目录
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # 使用官方的Nginx镜像作为基础镜像
-FROM nginx:1.21-alpine
+FROM nginx:1.25-alpine
 
 # 将编译好的Golang程序复制到Nginx镜像中
 COPY --from=builder /app/main /app/main
