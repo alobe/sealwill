@@ -27,6 +27,7 @@ func InitRouter() {
 
 	user := api.Group("/user")
 
+	user.Post("/register", register)
 	user.Post("/login", login)
 
 	app.Listen(":3000")

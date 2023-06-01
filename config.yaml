@@ -1,0 +1,5 @@
+mysql:
+  dsn: root:Okq7y4of0592@tcp(infra.zeabur.com:32267)/yue?charset=utf8mb4&parseTime=True&loc=Local
+
+redis:
+  url: redis://:a456kG3Hvg12@infra.zeabur.com:30030
