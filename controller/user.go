@@ -2,12 +2,11 @@ package controller
 
 import (
 	"context"
-	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/alobe/seawill/lib"
 	"github.com/alobe/seawill/model"
+	"github.com/alobe/seawill/util"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -29,14 +28,16 @@ func login(ctx *fiber.Ctx) error {
 
 	ctxbg := context.Background()
 
-	_, err := lib.Rds.Set(ctxbg, fmt.Sprintf("sealwill-user-%d", searchUser.ID), searchUser, time.Hour*24).Result()
+	key := util.RandomStr(64)
+
+	_, err := lib.Rds.Set(ctxbg, key, searchUser, time.Hour*24).Result()
 	if err != nil {
 		return err
 	}
 
 	ctx.Cookie(&fiber.Cookie{
 		Name:  "x-seawill",
-		Value: strconv.FormatUint(uint64(user.ID), 10),
+		Value: key,
 	})
 
 	return ctx.Status(200).JSON(fiber.Map{
