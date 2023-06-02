@@ -6,8 +6,8 @@ import (
 
 type User struct {
 	ID        int64  `gorm:"primaryKey;autoIncrement" json:"id"`
-	Name      string `gorm:"unique" json:"name"`
-	Email     string `gorm:"unique" json:"email"`
+	Name      string `gorm:"type:varchar(100)" json:"name"`
+	Email     string `gorm:"type:varchar(100)" json:"email"`
 	Avatar    string `gorm:"default:null" json:"avatar"`
 	Password  string `json:"password"`
 	CreatedAt int64  `gorm:"autoCreateTime:milli" json:"created_at"`

@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	lib.InitLog()
 	lib.InitDB()
 	controller.InitRouter()
 	defer lib.CloseDB()

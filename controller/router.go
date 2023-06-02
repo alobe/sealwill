@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/alobe/seawill/controller/middleware"
 	"github.com/goccy/go-json"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +22,7 @@ func InitRouter() {
 			AllowHeaders: "Origin, Content-Type, Accept",
 			AllowMethods: "GET",
 		}),
+		middleware.Log(),
 	)
 
 	api := app.Group("/api")
@@ -29,6 +31,7 @@ func InitRouter() {
 
 	user.Post("/register", register)
 	user.Post("/login", login)
+	user.Get("/list", middleware.CheckCookie, getUserList)
 
 	app.Listen(":3000")
 }

@@ -2,12 +2,14 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/alobe/seawill/lib"
 	"github.com/alobe/seawill/model"
 	"github.com/alobe/seawill/util"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -61,10 +63,38 @@ func register(ctx *fiber.Ctx) error {
 	user.Password = string(hashedPwd)
 
 	if err := lib.DB.Model(&model.User{}).Create(&user).Error; err != nil {
-		return err
+		return ctx.SendStatus(400)
 	}
 
 	return ctx.JSON(fiber.Map{
 		"message": "user registered successfully",
+	})
+}
+
+type GetUserParams struct {
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
+}
+
+type User struct {
+	ID     uint   `json:"id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Avatar string `json:"avatar"`
+}
+
+func getUserList(ctx *fiber.Ctx) error {
+	var params GetUserParams
+	fmt.Println(params)
+	if params.Limit == 0 || params.Limit > 50 {
+		params.Limit = 50
+	}
+	var users []User
+	if err := lib.DB.Model(&model.User{}).Find(&users).Limit(params.Limit).Offset(params.Offset).Error; err != nil {
+		log.Info().Msg("get user list failed")
+		return err
+	}
+	return ctx.JSON(fiber.Map{
+		"data": users,
 	})
 }
